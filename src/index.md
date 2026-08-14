@@ -2,6 +2,7 @@
 title: España en Datos
 theme: light
 toc: false
+footer: false
 ---
 
 <style>
@@ -17,6 +18,120 @@ toc: false
 .observablehq {
   max-width: 1280px;
   margin: 0 auto;
+}
+
+/* =========================================================
+   SINGLE PAGE NAVIGATION
+   ========================================================= */
+
+html {
+  scroll-behavior: smooth;
+}
+
+.atenea-nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  width: 100%;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 2rem;
+
+  padding: 0.9rem 1.5rem;
+
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(12px);
+
+  border-bottom: 1px solid var(--atenea-border);
+}
+
+.atenea-brand {
+  flex-shrink: 0;
+
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+
+  color: var(--atenea-navy) !important;
+  text-decoration: none !important;
+}
+
+.atenea-nav-links {
+  display: flex;
+  align-items: center;
+
+  gap: 1.35rem;
+
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  white-space: nowrap;
+}
+
+.atenea-nav-links::-webkit-scrollbar {
+  display: none;
+}
+
+.atenea-nav-links a {
+  color: var(--atenea-muted) !important;
+
+  font-size: 0.78rem;
+  font-weight: 600;
+
+  text-decoration: none !important;
+
+  transition: color 0.15s ease;
+}
+
+.atenea-nav-links a:hover {
+  color: var(--atenea-navy) !important;
+}
+
+
+/* Cada bloque principal */
+
+.dashboard-section {
+  scroll-margin-top: 80px;
+
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+
+  border-top: 1px solid var(--atenea-border);
+}
+
+
+/* El primero no necesita línea superior */
+
+.dashboard-section.first {
+  border-top: none;
+}
+
+
+/* Responsive */
+
+@media (max-width: 900px) {
+
+  .atenea-nav {
+    flex-direction: column;
+    align-items: flex-start;
+
+    gap: 0.65rem;
+
+    padding: 0.8rem 1rem;
+  }
+
+  .atenea-nav-links {
+    width: 100%;
+  }
+
+  .dashboard-section {
+    scroll-margin-top: 115px;
+  }
 }
 
 .hero {
@@ -194,6 +309,24 @@ toc: false
 }
 </style>
 
+<nav class="atenea-nav">
+
+  <a class="atenea-brand" href="#inicio">
+    ESPAÑA EN DATOS
+  </a>
+
+  <div class="atenea-nav-links">
+    <a href="#resumen">Resumen</a>
+    <a href="#economia">Economía</a>
+    <a href="#empleo">Empleo</a>
+    <a href="#vivienda">Vivienda</a>
+    <a href="#estado">Estado</a>
+    <a href="#pensiones">Pensiones</a>
+    <a href="#sociedad">Sociedad</a>
+    <a href="#mundo">Mundo</a>
+  </div>
+
+</nav>
 
 ```js
 import {KpiCard} from "./components/kpi-card.js";
@@ -366,7 +499,8 @@ display(meta);
 ```
 
 
-<div class="section-header">
+<div id="resumen" class="section-header dashboard-section first">
+
   <div class="section-kicker">
     Situación actual
   </div>
@@ -374,10 +508,12 @@ display(meta);
   <h2>España en 90 segundos</h2>
 
   <div class="section-description">
-    Seis indicadores esenciales para comprender rápidamente
-    la evolución económica y social de España.
+    Los indicadores esenciales para comprender rápidamente
+    la situación económica y social de España.
   </div>
+
 </div>
+
 
 
 ```js
@@ -400,71 +536,44 @@ display(grid);
 ```
 
 
-<div class="section-header">
-  <div class="section-kicker">
-    Benchmark internacional
-  </div>
-
-  <h2>España en perspectiva</h2>
-
+<div id="economia" class="section-header dashboard-section">
+  <div class="section-kicker">01 · Economía</div>
+  <h2>Economía y productividad</h2>
   <div class="section-description">
-    Cada indicador se comparará progresivamente con Europa,
-    economías OCDE y el conjunto mundial.
+    Crecimiento, productividad, renta, inversión y estructura económica.
   </div>
 </div>
 
 
-<div class="perspective-box">
-  <div class="perspective-grid">
-    <div class="perspective-item">
-      <div class="perspective-label">España</div>
-      <div class="perspective-value">Situación actual</div>
-    </div>
-    <div class="perspective-item">
-      <div class="perspective-label">Unión Europea</div>
-      <div class="perspective-value">Benchmark UE</div>
-    </div>
-    <div class="perspective-item">
-      <div class="perspective-label">OCDE</div>
-      <div class="perspective-value">Economías avanzadas</div>
-    </div>
-    <div class="perspective-item">
-      <div class="perspective-label">Mundo</div>
-      <div class="perspective-value">Benchmark global</div>
-    </div>
-    <div class="perspective-item">
-      <div class="perspective-label">Ranking</div>
-      <div class="perspective-value">Posición de España</div>
-    </div>
-
-  </div>
+<div id="empleo" class="section-header dashboard-section">
+  <div class="section-kicker">02 · Mercado laboral</div>
+  <h2>Empleo y salarios</h2>
+</div>
+<div id="vivienda" class="section-header dashboard-section">
+  <div class="section-kicker">03 · Vivienda</div>
+  <h2>Vivienda y accesibilidad</h2>
 </div>
 
 
-<details class="dev-details">
-  <summary>Diagnóstico de datos</summary>
-</details>
+<div id="estado" class="section-header dashboard-section">
+  <div class="section-kicker">04 · Sector público</div>
+  <h2>Finanzas públicas</h2>
+</div>
 
 
-```js
-const diagnostics = document.createElement("div");
+<div id="pensiones" class="section-header dashboard-section">
+  <div class="section-kicker">05 · Demografía</div>
+  <h2>Pensiones y demografía</h2>
+</div>
 
-diagnostics.innerHTML = `
-  <p>
-    <strong>Columnas:</strong><br>
-    ${availableColumns.join(" · ")}
-  </p>
 
-  <p>
-    <strong>Indicadores disponibles (${availableIndicators.length}):</strong><br>
-    ${availableIndicators.join(" · ")}
-  </p>
+<div id="sociedad" class="section-header dashboard-section">
+  <div class="section-kicker">06 · Sociedad</div>
+  <h2>La realidad social de España</h2>
+</div>
 
-  <p>
-    <strong>Indicadores mostrados:</strong><br>
-    ${indicatorsToShow.join(" · ")}
-  </p>
-`;
 
-display(diagnostics);
-```
+<div id="mundo" class="section-header dashboard-section">
+  <div class="section-kicker">07 · Benchmark internacional</div>
+  <h2>España en el mundo</h2>
+</div>
