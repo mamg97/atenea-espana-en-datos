@@ -1,0 +1,13 @@
+indicator_id,geo_code,geo_name,year,value,unit,source,status
+pib_pc,ESP,España,2024,33600,€,INE,final
+pib_pc,ESP,España,2025,34300,€,INE,avance
+prod,ESP,España,2024,118.4,índice,Eurostat,final
+prod,ESP,España,2025,119.2,índice,Eurostat,avance
+salario_med,ESP,España,2024,23740,€,INE,final
+salario_med,ESP,España,2025,24500,€,INE,avance
+paro,ESP,España,2025,9.93,%,EPA (Atenea),final
+paro,ESP,España,2026,10.83,%,EPA (Atenea),avance
+deuda_pib,ESP,España,2024,101.7,%,BdE,final
+deuda_pib,ESP,España,2025,100.7,%,BdE,avance
+pib_real,ESP,España,2024,1462073,M€,INE,final
+pib_real,ESP,España,2025,1498000,M€,INE,avance
