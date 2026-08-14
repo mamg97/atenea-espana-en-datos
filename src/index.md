@@ -428,6 +428,194 @@ html {
     grid-template-columns: 1fr;
   }
 }
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  html {
+    font-size: 16px;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+
+  .observablehq {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+
+  /* NAV */
+
+  .atenea-nav {
+    position: sticky;
+    top: 0;
+
+    width: 100%;
+
+    flex-direction: column;
+    align-items: flex-start;
+
+    gap: 0.6rem;
+
+    padding: 0.75rem 0;
+
+    background: rgba(255, 255, 255, 0.97);
+  }
+
+  .atenea-brand {
+    font-size: 0.8rem;
+  }
+
+  .atenea-nav-links {
+    width: 100%;
+
+    display: flex;
+    gap: 1rem;
+
+    overflow-x: auto;
+    white-space: nowrap;
+
+    padding-bottom: 0.25rem;
+  }
+
+  .atenea-nav-links a {
+    flex: 0 0 auto;
+    font-size: 0.78rem;
+  }
+
+
+  /* HERO */
+
+  .hero {
+    padding: 1.8rem 0 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-kicker {
+    font-size: 0.72rem;
+  }
+
+  .hero h1 {
+    font-size: 2.7rem;
+    line-height: 1.05;
+
+    margin-top: 0.5rem;
+    margin-bottom: 0.8rem;
+
+    white-space: normal;
+  }
+
+  .hero-subtitle {
+    max-width: 100%;
+
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 0.5rem 1.2rem;
+
+    margin-top: 1rem;
+
+    font-size: 0.8rem;
+  }
+
+
+  /* SECCIONES */
+
+  .dashboard-section {
+    scroll-margin-top: 110px;
+
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .section-header {
+    margin-bottom: 1rem;
+  }
+
+  .section-header h2 {
+    font-size: 1.7rem;
+    line-height: 1.15;
+  }
+
+  .section-kicker {
+    font-size: 0.72rem;
+  }
+
+  .section-description {
+    max-width: 100%;
+
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+
+  /* KPIs */
+
+  .kpi-grid {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
+  .kpi-card {
+    min-height: auto;
+
+    padding: 1.15rem;
+  }
+
+  .kpi-title {
+    font-size: 0.75rem;
+  }
+
+  .kpi-value {
+    font-size: 2rem;
+  }
+
+  .kpi-unit {
+    font-size: 0.82rem;
+  }
+
+  .kpi-diff {
+    font-size: 0.78rem;
+  }
+
+  .kpi-year {
+    font-size: 0.7rem;
+  }
+
+  .kpi-spark {
+    padding-top: 0.8rem;
+  }
+
+  .kpi-source {
+    white-space: normal;
+
+    font-size: 0.72rem;
+    line-height: 1.35;
+  }
+
+
+  /* Evitar desbordamientos */
+
+  img,
+  svg,
+  canvas {
+    max-width: 100%;
+  }
+}
+
 </style>
 
 <nav class="atenea-nav">
