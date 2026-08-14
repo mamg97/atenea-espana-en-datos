@@ -4,146 +4,218 @@ import * as htl from "npm:htl";
 export function KpiCard(data, options = {}) {
   const {
     indicatorId,
-    title = indicatorId ?? "Indicador",
-    formatValue = d => d?.toLocaleString("es-ES") ?? "—",
-    invertColors = false,
+    title = indicatorId,
+    formatValue = value => String(value),
+    unitLabel = "",
     isPercentage = false
   } = options;
 
-  // Protección frente a llamadas incorrectas
-  if (!Array.isArray(data)) {
-    return htl.html`
-      <div class="kpi-card">
-        <div class="kpi-title">${title}</div>
-        <div class="text-red">
-          Error: KpiCard no ha recibido un array de datos.
-        </div>
-      </div>
-    `;
-  }
-
-  if (!indicatorId) {
-    return htl.html`
-      <div class="kpi-card">
-        <div class="text-red">
-          Error: falta indicatorId.
-        </div>
-      </div>
-    `;
-  }
-
-  // Filtrar y ordenar datos por año
-  const df = data
-    .filter(d => d.indicator_id === indicatorId)
-    .filter(d => d.value != null && d.year != null)
+  const rows = data
+    .filter(d =>
+      d.indicator_id === indicatorId &&
+      Number.isFinite(Number(d.year)) &&
+      Number.isFinite(Number(d.value))
+    )
+    .map(d => ({
+      ...d,
+      year: Number(d.year),
+      value: Number(d.value)
+    }))
     .sort((a, b) => a.year - b.year);
 
-  // Si no existe el indicador
-  if (df.length === 0) {
+  if (!rows.length) {
     return htl.html`
-      <div class="kpi-card">
+      <article class="kpi-card">
         <div class="kpi-title">${title}</div>
-        <div class="kpi-value">—</div>
-        <div class="text-small muted">
-          Sin datos para "${indicatorId}"
-        </div>
-      </div>
+        <div class="kpi-empty">Dato no disponible</div>
+      </article>
     `;
   }
 
-  const latest = df[df.length - 1];
-  const previous = df[df.length - 2];
+  const latest = rows[rows.length - 1];
+  const previous =
+    rows.length > 1 ? rows[rows.length - 2] : null;
 
-  const value = latest.value;
-  const prevValue = previous ? previous.value : value;
-  const diff = value - prevValue;
+  let arrow = "•";
+  let diffText = "Sin comparación anterior";
 
-  // Cálculo de variaciones
-  let diffText = "";
+  if (previous) {
+    const diff = latest.value - previous.value;
 
-  if (isPercentage) {
-    diffText = `${Math.abs(diff).toFixed(1)} pp`;
-  } else {
-    const diffPct =
-      prevValue !== 0
-        ? (diff / prevValue) * 100
-        : 0;
+    arrow =
+      diff > 0 ? "▲" :
+        diff < 0 ? "▼" :
+          "●";
 
-    diffText = `${Math.abs(diffPct).toFixed(1)} %`;
+    if (isPercentage) {
+      diffText =
+        `${Math.abs(diff).toLocaleString("es-ES", {
+          minimumFractionDigits: 1,
+          maximumFractionDigits: 1
+        })} pp`;
+    } else {
+      const diffPct =
+        previous.value !== 0
+          ? (diff / previous.value) * 100
+          : 0;
+
+      diffText =
+        `${Math.abs(diffPct).toLocaleString("es-ES", {
+          minimumFractionDigits: 1,
+          maximumFractionDigits: 1
+        })} %`;
+    }
+
+    diffText += ` vs ${previous.year}`;
   }
 
-  // Lógica semántica
-  const isPositive = diff > 0;
-
-  let colorClass =
-    isPositive ? "text-green" : "text-red";
-
-  if (invertColors) {
-    colorClass =
-      isPositive ? "text-red" : "text-green";
-  }
-
-  const arrow =
-    diff > 0 ? "▲" :
-      diff < 0 ? "▼" :
-        "■";
-
-  // Sparkline
   const sparkline = Plot.plot({
-    width: 140,
-    height: 40,
+    width: 280,
+    height: 64,
     axis: null,
-    margin: 0,
+    marginTop: 6,
+    marginRight: 4,
+    marginBottom: 4,
+    marginLeft: 4,
+
     marks: [
-      Plot.lineY(df, {
+      Plot.lineY(rows, {
         x: "year",
         y: "value",
         stroke: "currentColor",
         strokeWidth: 2
       }),
 
-      Plot.dot(df, {
-        x: "year",
-        y: "value",
-        r: 2,
-        fill: "currentColor"
-      }),
-
       Plot.dot([latest], {
         x: "year",
         y: "value",
-        r: 3.5,
-        fill: "currentColor"
+        fill: "currentColor",
+        r: 3.5
       })
     ]
   });
 
+  const firstYear = rows[0].year;
+
+  const source =
+    latest.source ||
+    "Fuente no disponible";
+
+  const sourceUrlRaw =
+    String(latest.source_url || "");
+
+  const sourceUrl =
+    sourceUrlRaw
+      .split("|")[0]
+      .trim();
+
+  const hasSourceUrl =
+    /^https?:\/\//i.test(sourceUrl);
+
+  const status =
+    latest.status || "";
+
+  const definition =
+    latest.definition || "";
+
   return htl.html`
-    <div class="kpi-card">
+    <article class="kpi-card">
 
-      <div class="kpi-title">
-        ${title}
+      <div class="kpi-card-top">
+        <div class="kpi-title">${title}</div>
+
+        <div class="kpi-year">
+          ${latest.year}
+        </div>
       </div>
 
-      <div class="kpi-value">
-        ${formatValue(value)}
+      <div class="kpi-value-block">
+
+        <div class="kpi-value">
+          ${formatValue(latest.value)}
+        </div>
+
+        ${unitLabel
+      ? htl.html`
+                <div class="kpi-unit">
+                  ${unitLabel}
+                </div>
+              `
+      : ""
+    }
+
       </div>
 
-      <div class="kpi-diff ${colorClass} font-bold text-small">
-        ${arrow} ${diffText}
-        <span class="muted font-normal">
-          (vs año ant.)
-        </span>
+      <div class="kpi-diff">
+        <span class="kpi-arrow">${arrow}</span>
+        ${diffText}
       </div>
 
-      <div class="kpi-spark mt-2 opacity-70">
+      <div class="kpi-spark">
         ${sparkline}
       </div>
 
-      <div class="text-small muted">
-        ${latest.year}
+      <div class="kpi-years">
+        <span>${firstYear}</span>
+        <span>${latest.year}</span>
       </div>
 
-    </div>
+      <div class="kpi-source">
+
+        <span>Fuente · </span>
+
+        ${hasSourceUrl
+      ? htl.html`
+                <a
+                  href=${sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  ${source}
+                </a>
+              `
+      : source
+    }
+
+      </div>
+
+      ${definition || status
+      ? htl.html`
+              <details class="kpi-details">
+
+                <summary>
+                  Metodología
+                </summary>
+
+                <div class="kpi-details-body">
+
+                  ${status
+          ? htl.html`
+                          <div>
+                            <strong>Estado:</strong>
+                            ${status}
+                          </div>
+                        `
+          : ""
+        }
+
+                  ${definition
+          ? htl.html`
+                          <div>
+                            <strong>Definición:</strong>
+                            ${definition}
+                          </div>
+                        `
+          : ""
+        }
+
+                </div>
+
+              </details>
+            `
+      : ""
+    }
+
+    </article>
   `;
 }

@@ -16,7 +16,7 @@ footer: false
 }
 
 .observablehq {
-  max-width: 1280px;
+  max-width: 1440px;
   margin: 0 auto;
 }
 
@@ -26,6 +26,7 @@ footer: false
 
 html {
   scroll-behavior: smooth;
+  font-size: 24px;
 }
 
 .atenea-nav {
@@ -53,7 +54,7 @@ html {
 .atenea-brand {
   flex-shrink: 0;
 
-  font-size: 0.82rem;
+  font-size: 0.9rem;
   font-weight: 800;
   letter-spacing: 0.08em;
 
@@ -80,7 +81,7 @@ html {
 .atenea-nav-links a {
   color: var(--atenea-muted) !important;
 
-  font-size: 0.78rem;
+  font-size: 0.85rem;
   font-weight: 600;
 
   text-decoration: none !important;
@@ -98,8 +99,8 @@ html {
 .dashboard-section {
   scroll-margin-top: 80px;
 
-  padding-top: 4rem;
-  padding-bottom: 4rem;
+  padding-top: 0.0rem;
+  padding-bottom: 0.5rem;
 
   border-top: 1px solid var(--atenea-border);
 }
@@ -135,7 +136,7 @@ html {
 }
 
 .hero {
-  padding: 3rem 0 2rem;
+  padding: 1.5rem 0 1rem;
   border-bottom: 1px solid var(--atenea-border);
   margin-bottom: 2.5rem;
 }
@@ -143,42 +144,44 @@ html {
 .hero-kicker {
   color: var(--atenea-gold);
   font-weight: 700;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
 }
 
 .hero h1 {
   color: var(--atenea-navy);
-  font-size: 3.5rem;
+  font-size: 4rem;
   line-height: 1;
   margin: 0.6rem 0 1rem;
+  max-width:none;
+  white-space: nowrap;
 }
 
 .hero-subtitle {
   color: var(--atenea-muted);
   font-size: 1.1rem;
-  max-width: 780px;
+  max-width: none;
   line-height: 1.6;
 }
 
 .hero-meta {
   display: flex;
-  gap: 2rem;
+  gap: 1rem;
   margin-top: 1.3rem;
   color: var(--atenea-muted);
-  font-size: 0.85rem;
+  font-size: 0.95rem;
 }
 
 .section-header {
-  margin-top: 3rem;
+  margin-top: 2.5rem;
   margin-bottom: 1.5rem;
 }
 
 .section-kicker {
   color: var(--atenea-gold);
   font-weight: 700;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
 }
@@ -186,11 +189,16 @@ html {
 .section-header h2 {
   color: var(--atenea-navy);
   margin: 0.4rem 0;
+
+  font-size: 2rem;
+  line-height: 1.15;
 }
 
 .section-description {
   color: var(--atenea-muted);
-  max-width: 800px;
+  max-width: none;
+  font-size: 0.9rem;
+  line-height: 1.55;
 }
 
 .kpi-grid {
@@ -200,59 +208,172 @@ html {
 }
 
 .kpi-card {
-  min-height: 180px;
-  padding: 1.4rem;
+  min-height: 270px;
+  padding: 1.35rem;
+
+  display: flex;
+  flex-direction: column;
+
   background: white;
+
   border: 1px solid var(--atenea-border);
   border-radius: 12px;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 24px rgba(11, 36, 71, 0.06);
+}
+
+.kpi-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 .kpi-title {
   color: var(--atenea-muted);
+
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
+
   font-weight: 700;
-  font-size: 0.8rem;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.kpi-year {
+  flex-shrink: 0;
+
+  padding: 0.2rem 0.45rem;
+
+  border: 1px solid var(--atenea-border);
+  border-radius: 100px;
+
+  color: var(--atenea-muted);
+  font-size: 0.76rem;
+}
+
+.kpi-value-block {
+  margin-top: 1rem;
 }
 
 .kpi-value {
   color: var(--atenea-navy);
-  font-size: 2rem;
+
+  font-size: 2.4rem;
+  line-height: 1.05;
+
   font-weight: 700;
-  margin: 0.7rem 0 0.3rem;
 }
 
-.kpi-spark {
+.kpi-unit {
+  margin-top: 0.3rem;
+
+  color: var(--atenea-muted);
+
+  font-size: 0.88rem;
+}
+
+.kpi-diff {
+  margin-top: 0.65rem;
+
+  color: var(--atenea-muted);
+
+  font-size: 0.85rem;
+}
+
+.kpi-arrow {
   color: var(--atenea-blue);
 }
 
-.text-green,
-.text-red {
-  color: var(--atenea-muted) !important;
+.kpi-spark {
+  width: 100%;
+
+  margin-top: auto;
+  padding-top: 1rem;
+
+  color: var(--atenea-blue);
 }
 
-.text-small {
-  font-size: 0.78rem;
+.kpi-spark svg {
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  overflow: visible;
 }
 
-.muted {
+.kpi-years {
+  display: flex;
+  justify-content: space-between;
+
+  margin-top: 0.15rem;
+
+  color: var(--atenea-muted);
+
+  font-size: 0.72rem;
+}
+
+.kpi-source {
+  margin-top: 0.8rem;
+  padding-top: 0.7rem;
+
+  border-top: 1px solid var(--atenea-border);
+
+  color: var(--atenea-muted);
+
+  font-size: 0.6rem;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kpi-source a {
+  color: var(--atenea-blue) !important;
+  text-decoration: none !important;
+}
+
+.kpi-source a:hover {
+  text-decoration: underline !important;
+}
+
+.kpi-details {
+  margin-top: 0.55rem;
+
+  color: var(--atenea-muted);
+
+  font-size: 0.6rem;
+}
+
+.kpi-details summary {
+  cursor: pointer;
+
   color: var(--atenea-muted);
 }
 
-.font-bold {
-  font-weight: 600;
+.kpi-details-body {
+  display: grid;
+  gap: 0.45rem;
+
+  margin-top: 0.6rem;
+
+  line-height: 1.45;
 }
 
-.font-normal {
-  font-weight: 400;
-}
+.kpi-empty {
+  margin-top: 1rem;
 
-.mt-2 {
-  margin-top: 0.8rem;
-}
-
-.opacity-70 {
-  opacity: 0.8;
+  color: var(--atenea-muted);
 }
 
 .perspective-box {
@@ -312,7 +433,7 @@ html {
 <nav class="atenea-nav">
 
   <a class="atenea-brand" href="#inicio">
-    ESPAÑA EN DATOS
+    Inicio
   </a>
 
   <div class="atenea-nav-links">
@@ -440,6 +561,68 @@ const preferredIds = [
   "inflacion_ipc_media_anual"
 ];
 
+const kpiPresentation = {
+
+  crecimiento_pib_real: {
+    title: "Crecimiento del PIB",
+    formatValue: value =>
+      `${value.toLocaleString("es-ES", {
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1
+      })} %`,
+    unitLabel: "variación real anual",
+    isPercentage: true
+  },
+
+  pib_per_capita_eur: {
+    title: "PIB per cápita",
+    formatValue: value =>
+      `${Math.round(value).toLocaleString("es-ES")} €`,
+    unitLabel: "por habitante"
+  },
+
+  salario_mediano_anual_bruto_Total: {
+    title: "Salario mediano",
+    formatValue: value =>
+      `${Math.round(value).toLocaleString("es-ES")} €`,
+    unitLabel: "brutos al año por trabajador"
+  },
+
+  tasa_desempleo: {
+    title: "Tasa de desempleo",
+    formatValue: value =>
+      `${value.toLocaleString("es-ES", {
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1
+      })} %`,
+    unitLabel: "de la población activa",
+    isPercentage: true
+  },
+
+  deuda_publica_pde_pib: {
+    title: "Deuda pública",
+    formatValue: value =>
+      `${value.toLocaleString("es-ES", {
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1
+      })} %`,
+    unitLabel: "del PIB",
+    isPercentage: true
+  },
+
+  inflacion_ipc_media_anual: {
+    title: "Inflación",
+    formatValue: value =>
+      `${value.toLocaleString("es-ES", {
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1
+      })} %`,
+    unitLabel: "IPC · media anual",
+    isPercentage: true
+  }
+
+};
+
 const selectedIndicators = preferredIds
   .filter(id => availableIndicators.includes(id));
 
@@ -465,15 +648,13 @@ const indicatorCount = availableIndicators.length;
 
 <div id="inicio" class="hero">
   <div class="hero-kicker">
-    ATENEA · Observatorio de España
+    ATENEA
   </div>
 
-  <h1>España en Datos</h1>
+  <h1>España en datos</h1>
 
   <div class="hero-subtitle">
-    Una radiografía de la realidad económica, social e institucional
-    de España construida a partir de datos verificables, trazables
-    y comparables internacionalmente.
+    Una radiografía de la realidad económica, social e institucional de España construida a partir de datos verificables, trazables y  comparables internacionalmente.
   </div>
 </div>
 
@@ -493,7 +674,7 @@ meta.innerHTML = `
   </span>
 
   <span>
-    Último año:
+    Cobertura hasta:
     <strong>${latestDatasetYear}</strong>
   </span>
 `;
@@ -508,10 +689,10 @@ display(meta);
     Situación actual
   </div>
 
-  <h2>España en 90 segundos</h2>
+  <h2>España en un minuto</h2>
 
   <div class="section-description">
-    Los indicadores esenciales para comprender rápidamente
+    Indicadores esenciales para comprender rápidamente
     la situación económica y social de España.
   </div>
 
@@ -529,11 +710,28 @@ grid.className = "kpi-grid";
 
 for (const indicatorId of indicatorsToShow) {
 
+  const presentation =
+    kpiPresentation[indicatorId] ?? {};
+
   const card = KpiCard(spainData, {
+
     indicatorId,
-    title: getTitle(indicatorId),
-    formatValue: formatter(indicatorId),
-    isPercentage: isPercentage(indicatorId)
+
+    title:
+      presentation.title ??
+      getTitle(indicatorId),
+
+    formatValue:
+      presentation.formatValue ??
+      formatter(indicatorId),
+
+    unitLabel:
+      presentation.unitLabel ?? "",
+
+    isPercentage:
+      presentation.isPercentage ??
+      isPercentage(indicatorId)
+
   });
 
   grid.append(card);
