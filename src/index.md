@@ -377,7 +377,10 @@ const availableIndicators = [
 
 function getRows(indicatorId) {
   return data
-    .filter(d => d.indicator_id === indicatorId)
+    .filter(d =>
+      d.indicator_id === indicatorId &&
+      (!d.geo_name || d.geo_name === "España")
+    )
     .sort((a, b) => a.year - b.year);
 }
 
@@ -429,12 +432,12 @@ function isPercentage(indicatorId) {
 }
 
 const preferredIds = [
-  "pib_nominal_eur",
-  "pib_per_capita_eur",
   "crecimiento_pib_real",
-  "poblacion_residente",
+  "pib_per_capita_eur",
+  "salario_mediano_anual_bruto_Total",
   "tasa_desempleo",
-  "deuda_publica_pde_pib"
+  "deuda_publica_pde_pib",
+  "inflacion_ipc_media_anual"
 ];
 
 const selectedIndicators = preferredIds
@@ -460,7 +463,7 @@ const indicatorCount = availableIndicators.length;
 ```
 
 
-<div class="hero">
+<div id="inicio" class="hero">
   <div class="hero-kicker">
     ATENEA · Observatorio de España
   </div>
@@ -517,12 +520,16 @@ display(meta);
 
 
 ```js
+const spainData = data.filter(
+  d => !d.geo_name || d.geo_name === "España"
+);
+
 const grid = document.createElement("div");
 grid.className = "kpi-grid";
 
 for (const indicatorId of indicatorsToShow) {
 
-  const card = KpiCard(data, {
+  const card = KpiCard(spainData, {
     indicatorId,
     title: getTitle(indicatorId),
     formatValue: formatter(indicatorId),
