@@ -476,12 +476,24 @@ html {
     margin-bottom: 1rem;
   }
 
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
   /* Adaptación para móviles: una sola columna y quitamos la línea */
   @media (max-width: 768px) {
     .seccion-con-analisis {
       grid-template-columns: 1fr;
       gap: 1rem;
     }
+
+    /* Forzamos que las unidades y textos dentro de las tarjetas se adapten bien en móvil */
+    .kpi-card .unit, 
+    .kpi-grid span,
+    .kpi-card span {
+      font-size: 1rem !important; /* Ajusta este valor si lo prefieres un poco más pequeño o grande */
+    }
+
     .columna-analisis {
       border-left: none;
       border-top: 1px solid var(--theme-foreground-faintest);
@@ -489,10 +501,6 @@ html {
       padding-top: 1rem;
     }
   }
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
 
 @media (max-width: 900px) {
   .kpi-grid {
