@@ -2,7 +2,7 @@
 title: España en Datos
 theme: light
 toc: false
-footer: false
+footer: By Miguel Ángel Mayordomo Gragera - ACTUAL BORRADOR
 ---
 
 <style>
@@ -26,7 +26,7 @@ footer: false
 
 html {
   scroll-behavior: smooth;
-  font-size: 24px;
+  font-size: 16px;
 }
 
 .atenea-nav {
@@ -203,13 +203,13 @@ html {
 
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
 }
 
 .kpi-card {
-  min-height: 270px;
-  padding: 1.35rem;
+  height: 230 px;
+  padding: 1.2rem 1.25rem;
 
   display: flex;
   flex-direction: column;
@@ -262,13 +262,13 @@ html {
 }
 
 .kpi-value-block {
-  margin-top: 1rem;
+  margin-top: 0.7rem;
 }
 
 .kpi-value {
   color: var(--atenea-navy);
 
-  font-size: 2.4rem;
+  font-size: 1.8rem;
   line-height: 1.05;
 
   font-weight: 700;
@@ -279,7 +279,7 @@ html {
 
   color: var(--atenea-muted);
 
-  font-size: 0.88rem;
+  font-size: 0.rem;
 }
 
 .kpi-diff {
@@ -295,10 +295,10 @@ html {
 }
 
 .kpi-spark {
-  width: 100%;
+  width: 90%;
 
   margin-top: auto;
-  padding-top: 1rem;
+  padding-top: 0.9rem;
 
   color: var(--atenea-blue);
 }
@@ -412,6 +412,44 @@ html {
   font-size: 0.8rem;
 }
 
+.metric-group {
+  margin-top: 2rem;
+}
+
+.metric-group:first-of-type {
+  margin-top: 1.5rem;
+}
+
+.metric-group-title {
+  margin: 0 0 1rem;
+
+  color: var(--atenea-navy);
+
+  font-size: 1.15rem;
+  font-weight: 650;
+}
+
+.section-note {
+  max-width: 900px;
+
+  margin: 1rem 0 1.5rem;
+  padding: 0.9rem 1rem;
+
+  background: var(--atenea-cream);
+
+  border-left: 3px solid var(--atenea-gold);
+  border-radius: 4px;
+
+  color: var(--atenea-muted);
+
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
 @media (max-width: 900px) {
   .kpi-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -428,10 +466,6 @@ html {
     grid-template-columns: 1fr;
   }
 }
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
 
 @media (max-width: 700px) {
 
@@ -614,6 +648,19 @@ html {
   canvas {
     max-width: 100%;
   }
+
+  .metric-group {
+    margin-top: 1.5rem;
+  }
+
+  .metric-group-title {
+    font-size: 1.05rem;
+  }
+
+  .section-note {
+    font-size: 0.85rem;
+  }
+
 }
 
 </style>
@@ -678,6 +725,10 @@ const data = rawData
   .filter(d =>
     Number.isFinite(d.year) &&
     Number.isFinite(d.value)
+  );
+
+  const spainData = data.filter(
+    d => !d.geo_name || d.geo_name === "España"
   );
 
 const availableIndicators = [
@@ -749,67 +800,720 @@ const preferredIds = [
   "inflacion_ipc_media_anual"
 ];
 
+const nf0 = new Intl.NumberFormat("es-ES", {
+  maximumFractionDigits: 0
+});
+
+const nf1 = new Intl.NumberFormat("es-ES", {
+  minimumFractionDigits: 1,
+  maximumFractionDigits: 1
+});
+
+const nfCompact = new Intl.NumberFormat("es-ES", {
+  notation: "compact",
+  maximumFractionDigits: 1
+});
+
+const euro0 = value => `${nf0.format(value)} €`;
+const euro1 = value => `${nf1.format(value)} €`;
+const pct1 = value => `${nf1.format(value)} %`;
+const num1 = value => nf1.format(value);
+const integer = value => nf0.format(value);
+const compact = value => nfCompact.format(value);
+const millionsEuro = value => `${nf0.format(value)} M€`;
+
+
 const kpiPresentation = {
+
+  /* ======================================================
+     ECONOMÍA
+     ====================================================== */
 
   crecimiento_pib_real: {
     title: "Crecimiento del PIB",
-    formatValue: value =>
-      `${value.toLocaleString("es-ES", {
-        minimumFractionDigits: 1,
-        maximumFractionDigits: 1
-      })} %`,
+    formatValue: pct1,
     unitLabel: "variación real anual",
     isPercentage: true
   },
 
   pib_per_capita_eur: {
     title: "PIB per cápita",
-    formatValue: value =>
-      `${Math.round(value).toLocaleString("es-ES")} €`,
+    formatValue: euro0,
     unitLabel: "por habitante"
   },
 
-  salario_mediano_anual_bruto_Total: {
-    title: "Salario mediano",
-    formatValue: value =>
-      `${Math.round(value).toLocaleString("es-ES")} €`,
-    unitLabel: "brutos al año por trabajador"
+  pib_nominal_eur: {
+    title: "PIB nominal",
+    formatValue: millionsEuro,
+    unitLabel: "millones de euros"
   },
 
-  tasa_desempleo: {
-    title: "Tasa de desempleo",
-    formatValue: value =>
-      `${value.toLocaleString("es-ES", {
-        minimumFractionDigits: 1,
-        maximumFractionDigits: 1
-      })} %`,
-    unitLabel: "de la población activa",
-    isPercentage: true
-  },
-
-  deuda_publica_pde_pib: {
-    title: "Deuda pública",
-    formatValue: value =>
-      `${value.toLocaleString("es-ES", {
-        minimumFractionDigits: 1,
-        maximumFractionDigits: 1
-      })} %`,
-    unitLabel: "del PIB",
-    isPercentage: true
+  posicion_pib_mundial: {
+    title: "Posición económica mundial",
+    formatValue: value => `#${Math.round(value)}`,
+    unitLabel: "por tamaño del PIB"
   },
 
   inflacion_ipc_media_anual: {
     title: "Inflación",
-    formatValue: value =>
-      `${value.toLocaleString("es-ES", {
-        minimumFractionDigits: 1,
-        maximumFractionDigits: 1
-      })} %`,
+    formatValue: pct1,
     unitLabel: "IPC · media anual",
     isPercentage: true
+  },
+
+  inflacion_alimentos_media_anual: {
+    title: "Inflación de alimentos",
+    formatValue: pct1,
+    unitLabel: "media anual",
+    isPercentage: true
+  },
+
+  ipc_indice_general_media_anual: {
+    title: "Índice general de precios",
+    formatValue: num1,
+    unitLabel: "base 2021 = 100"
+  },
+
+
+  /* ======================================================
+     EMPLEO
+     ====================================================== */
+
+  tasa_actividad: {
+    title: "Tasa de actividad",
+    formatValue: pct1,
+    unitLabel: "población activa",
+    isPercentage: true
+  },
+
+  tasa_empleo: {
+    title: "Tasa de empleo",
+    formatValue: pct1,
+    unitLabel: "población ocupada",
+    isPercentage: true
+  },
+
+  tasa_desempleo: {
+    title: "Tasa de desempleo",
+    formatValue: pct1,
+    unitLabel: "población activa",
+    isPercentage: true
+  },
+
+  tasa_paro_juvenil: {
+    title: "Paro juvenil",
+    formatValue: pct1,
+    unitLabel: "población activa joven",
+    isPercentage: true
+  },
+
+
+  /* ======================================================
+     SALARIOS
+     ====================================================== */
+
+  salario_mediano_anual_bruto_Total: {
+    title: "Salario mediano",
+    formatValue: euro0,
+    unitLabel: "brutos al año por trabajador"
+  },
+
+  salario_medio_anual_bruto_Total: {
+    title: "Salario medio",
+    formatValue: euro0,
+    unitLabel: "brutos al año por trabajador"
+  },
+
+  salario_modal_anual_bruto_Total: {
+    title: "Salario más frecuente",
+    formatValue: euro0,
+    unitLabel: "brutos al año"
+  },
+
+  salario_mediano_mensual_bruto_epa_Total: {
+    title: "Salario mediano mensual",
+    formatValue: euro0,
+    unitLabel: "empleo principal"
+  },
+
+  salario_medio_mensual_bruto_epa_Total: {
+    title: "Salario medio mensual",
+    formatValue: euro0,
+    unitLabel: "empleo principal"
+  },
+
+  smi_mensual_14_pagas_Total: {
+    title: "Salario mínimo",
+    formatValue: euro0,
+    unitLabel: "mensuales · 14 pagas"
+  },
+
+  smi_anual_14_pagas_Total: {
+    title: "Salario mínimo anual",
+    formatValue: euro0,
+    unitLabel: "14 pagas"
+  },
+
+  salario_medio_anual_bruto_Hombres: {
+    title: "Salario medio · hombres",
+    formatValue: euro0,
+    unitLabel: "brutos al año"
+  },
+
+  salario_medio_anual_bruto_Mujeres: {
+    title: "Salario medio · mujeres",
+    formatValue: euro0,
+    unitLabel: "brutos al año"
+  },
+
+  brecha_salarial_media_anual_mujeres_hombres_Total: {
+    title: "Brecha salarial",
+    formatValue: pct1,
+    unitLabel: "respecto al salario medio masculino",
+    isPercentage: true
+  },
+
+  "salario_medio_mensual_bruto_epa_formacion_Hasta secundaria 1ª etapa": {
+    title: "Salario · educación básica",
+    formatValue: euro0,
+    unitLabel: "brutos al mes"
+  },
+
+  "salario_medio_mensual_bruto_epa_formacion_Secundaria 2ª etapa": {
+    title: "Salario · educación secundaria",
+    formatValue: euro0,
+    unitLabel: "brutos al mes"
+  },
+
+  "salario_medio_mensual_bruto_epa_formacion_Superior, incluido doctorado": {
+    title: "Salario · educación superior",
+    formatValue: euro0,
+    unitLabel: "brutos al mes"
+  },
+
+
+  /* ======================================================
+     VIVIENDA
+     ====================================================== */
+
+  variacion_precio_vivienda: {
+    title: "Precio de la vivienda",
+    formatValue: pct1,
+    unitLabel: "variación anual",
+    isPercentage: true
+  },
+
+  indice_precio_vivienda: {
+    title: "Índice precio vivienda",
+    formatValue: num1,
+    unitLabel: "base 2015 = 100"
+  },
+
+  variacion_precio_alquiler: {
+    title: "Precio del alquiler",
+    formatValue: pct1,
+    unitLabel: "variación anual",
+    isPercentage: true
+  },
+
+  indice_precio_alquiler: {
+    title: "Índice precio alquiler",
+    formatValue: num1,
+    unitLabel: "base 2015 = 100"
+  },
+
+  compraventas_viviendas_total: {
+    title: "Compraventas de vivienda",
+    formatValue: integer,
+    unitLabel: "operaciones"
+  },
+
+  compraventas_vivienda_nueva: {
+    title: "Compraventas · vivienda nueva",
+    formatValue: integer,
+    unitLabel: "operaciones"
+  },
+
+
+  /* ======================================================
+     SECTOR PÚBLICO
+     ====================================================== */
+
+  deuda_publica_pde_pib: {
+    title: "Deuda pública",
+    formatValue: pct1,
+    unitLabel: "del PIB",
+    isPercentage: true
+  },
+
+  variacion_deuda_publica_pp: {
+    title: "Variación de la deuda",
+    formatValue: value => `${nf1.format(value)} pp`,
+    unitLabel: "variación anual",
+    isPercentage: true
+  },
+
+  gasto_sanitario_publico_pib: {
+    title: "Gasto sanitario público",
+    formatValue: pct1,
+    unitLabel: "del PIB",
+    isPercentage: true
+  },
+
+
+  /* ======================================================
+     DEMOGRAFÍA
+     ====================================================== */
+
+  poblacion_residente: {
+    title: "Población residente",
+    formatValue: compact,
+    unitLabel: "personas"
+  },
+
+  crecimiento_poblacion: {
+    title: "Crecimiento de la población",
+    formatValue: pct1,
+    unitLabel: "variación anual",
+    isPercentage: true
+  },
+
+
+  /* ======================================================
+     RENTA Y DESIGUALDAD
+     ====================================================== */
+
+  renta_neta_media_persona: {
+    title: "Renta neta media",
+    formatValue: euro0,
+    unitLabel: "por persona"
+  },
+
+  renta_media_unidad_consumo: {
+    title: "Renta por unidad de consumo",
+    formatValue: euro0,
+    unitLabel: "por unidad de consumo"
+  },
+
+  indice_gini: {
+    title: "Desigualdad · Gini",
+    formatValue: num1,
+    unitLabel: "índice 0–100"
+  },
+
+  ratio_s80_s20: {
+    title: "Desigualdad · S80/S20",
+    formatValue: num1,
+    unitLabel: "ratio de renta"
+  },
+
+  tasa_arope: {
+    title: "Riesgo de pobreza o exclusión",
+    formatValue: pct1,
+    unitLabel: "tasa AROPE",
+    isPercentage: true
+  },
+
+  tasa_riesgo_pobreza: {
+    title: "Riesgo de pobreza",
+    formatValue: pct1,
+    unitLabel: "población",
+    isPercentage: true
+  },
+
+  carencia_material_social_severa: {
+    title: "Carencia material severa",
+    formatValue: pct1,
+    unitLabel: "población",
+    isPercentage: true
+  },
+
+  baja_intensidad_trabajo: {
+    title: "Baja intensidad laboral",
+    formatValue: pct1,
+    unitLabel: "población",
+    isPercentage: true
+  },
+
+
+  /* ======================================================
+     TURISMO / PROYECCIÓN EXTERIOR
+     ====================================================== */
+
+  turistas_internacionales: {
+    title: "Turistas internacionales",
+    formatValue: compact,
+    unitLabel: "personas"
+  },
+
+  visitantes_internacionales_total: {
+    title: "Visitantes internacionales",
+    formatValue: compact,
+    unitLabel: "personas"
+  },
+
+  gasto_turistico_internacional: {
+    title: "Gasto turístico internacional",
+    formatValue: millionsEuro,
+    unitLabel: "millones de euros"
+  },
+
+  gasto_medio_turista: {
+    title: "Gasto medio por turista",
+    formatValue: euro0,
+    unitLabel: "por viaje"
+  },
+
+  duracion_media_viaje_turista: {
+    title: "Duración media del viaje",
+    formatValue: value => `${nf1.format(value)} días`,
+    unitLabel: "por turista"
   }
 
 };
+
+
+const sectionDefinitions = {
+
+  economia: {
+    kicker: "01 · Economía",
+    title: "Economía y precios",
+    description:
+      "Crecimiento, renta, tamaño de la economía y evolución de los precios.",
+
+    groups: [
+      {
+        title: "Actividad y renta",
+        indicators: [
+          "crecimiento_pib_real",
+          "pib_per_capita_eur",
+          "pib_nominal_eur"
+        ]
+      },
+
+      {
+        title: "Precios",
+        indicators: [
+          "inflacion_ipc_media_anual",
+          "inflacion_alimentos_media_anual",
+          "ipc_indice_general_media_anual"
+        ]
+      }
+    ]
+  },
+
+
+  empleo: {
+    kicker: "02 · Mercado laboral",
+    title: "Empleo y salarios",
+    description:
+      "Actividad, empleo, desempleo y evolución de las rentas del trabajo.",
+
+    groups: [
+      {
+        title: "Mercado laboral",
+        indicators: [
+          "tasa_actividad",
+          "tasa_empleo",
+          "tasa_desempleo",
+          "tasa_paro_juvenil"
+        ]
+      },
+
+      {
+        title: "Salarios",
+        indicators: [
+          "salario_mediano_anual_bruto_Total",
+          "salario_medio_anual_bruto_Total",
+          "salario_modal_anual_bruto_Total",
+          "smi_mensual_14_pagas_Total",
+          "salario_mediano_mensual_bruto_epa_Total",
+          "salario_medio_mensual_bruto_epa_Total"
+        ]
+      },
+
+      {
+        title: "Brechas salariales",
+        indicators: [
+          "salario_medio_anual_bruto_Hombres",
+          "salario_medio_anual_bruto_Mujeres",
+          "brecha_salarial_media_anual_mujeres_hombres_Total"
+        ]
+      },
+
+      {
+        title: "Salario y formación",
+        indicators: [
+          "salario_medio_mensual_bruto_epa_formacion_Hasta secundaria 1ª etapa",
+          "salario_medio_mensual_bruto_epa_formacion_Secundaria 2ª etapa",
+          "salario_medio_mensual_bruto_epa_formacion_Superior, incluido doctorado"
+        ]
+      }
+    ]
+  },
+
+
+  vivienda: {
+    kicker: "03 · Vivienda",
+    title: "Vivienda y accesibilidad",
+    description:
+      "Evolución de los precios de compra y alquiler y actividad del mercado residencial.",
+
+    groups: [
+      {
+        title: "Precios",
+        indicators: [
+          "variacion_precio_vivienda",
+          "indice_precio_vivienda",
+          "variacion_precio_alquiler",
+          "indice_precio_alquiler"
+        ]
+      },
+
+      {
+        title: "Mercado residencial",
+        indicators: [
+          "compraventas_viviendas_total",
+          "compraventas_vivienda_nueva"
+        ]
+      }
+    ]
+  },
+
+
+  estado: {
+    kicker: "04 · Sector público",
+    title: "Finanzas públicas",
+    description:
+      "Deuda pública y algunos de los principales indicadores disponibles de gasto público.",
+
+    groups: [
+      {
+        title: "Sector público",
+        indicators: [
+          "deuda_publica_pde_pib",
+          "variacion_deuda_publica_pp",
+          "gasto_sanitario_publico_pib"
+        ]
+      }
+    ]
+  },
+
+
+  pensiones: {
+    kicker: "05 · Demografía",
+    title: "Pensiones y demografía",
+    description:
+      "La estructura demográfica condiciona la sostenibilidad futura del sistema de pensiones.",
+
+    note:
+      "El dataset actual todavía no contiene indicadores específicos del sistema de pensiones. Esta primera versión muestra únicamente la base demográfica.",
+
+    groups: [
+      {
+        title: "Demografía",
+        indicators: [
+          "poblacion_residente",
+          "crecimiento_poblacion"
+        ]
+      }
+    ]
+  },
+
+
+  sociedad: {
+    kicker: "06 · Sociedad",
+    title: "Renta, pobreza y desigualdad",
+    description:
+      "Distribución de la renta, desigualdad económica y riesgo de pobreza o exclusión social.",
+
+    groups: [
+      {
+        title: "Renta",
+        indicators: [
+          "renta_neta_media_persona",
+          "renta_media_unidad_consumo"
+        ]
+      },
+
+      {
+        title: "Desigualdad",
+        indicators: [
+          "indice_gini",
+          "ratio_s80_s20"
+        ]
+      },
+
+      {
+        title: "Pobreza y exclusión",
+        indicators: [
+          "tasa_arope",
+          "tasa_riesgo_pobreza",
+          "carencia_material_social_severa",
+          "baja_intensidad_trabajo"
+        ]
+      }
+    ]
+  },
+
+
+  mundo: {
+    kicker: "07 · España en el mundo",
+    title: "Posición y proyección internacional",
+    description:
+      "Peso económico y algunos indicadores de la inserción de España en los flujos internacionales.",
+
+    note:
+      "La comparación sistemática con UE, eurozona, OCDE y otras economías se incorporará en la siguiente fase.",
+
+    groups: [
+      {
+        title: "Posición internacional",
+        indicators: [
+          "posicion_pib_mundial"
+        ]
+      },
+
+      {
+        title: "Turismo internacional",
+        indicators: [
+          "turistas_internacionales",
+          "visitantes_internacionales_total",
+          "gasto_turistico_internacional",
+          "gasto_medio_turista",
+          "duracion_media_viaje_turista"
+        ]
+      }
+    ]
+  }
+
+};
+
+function renderMetricSection(sectionId) {
+
+  const config = sectionDefinitions[sectionId];
+
+  const section = document.createElement("section");
+
+  section.id = sectionId;
+  section.className = "dashboard-section";
+
+
+  /* HEADER */
+
+  const header = document.createElement("div");
+  header.className = "section-header";
+
+  header.innerHTML = `
+    <div class="section-kicker">
+      ${config.kicker}
+    </div>
+
+    <h2>
+      ${config.title}
+    </h2>
+
+    <div class="section-description">
+      ${config.description}
+    </div>
+  `;
+
+  section.append(header);
+
+
+  /* NOTA METODOLÓGICA */
+
+  if (config.note) {
+
+    const note = document.createElement("div");
+
+    note.className = "section-note";
+    note.textContent = config.note;
+
+    section.append(note);
+  }
+
+
+  /* GRUPOS */
+
+  for (const group of config.groups) {
+
+    const availableGroupIndicators =
+      group.indicators.filter(
+        id => availableIndicators.includes(id)
+      );
+
+    if (!availableGroupIndicators.length) {
+      continue;
+    }
+
+
+    const groupElement =
+      document.createElement("div");
+
+    groupElement.className = "metric-group";
+
+
+    const groupTitle =
+      document.createElement("h3");
+
+    groupTitle.className = "metric-group-title";
+    groupTitle.textContent = group.title;
+
+    groupElement.append(groupTitle);
+
+
+    const grid =
+      document.createElement("div");
+
+    grid.className = "kpi-grid";
+
+
+    for (
+      const indicatorId
+      of availableGroupIndicators
+    ) {
+
+      const presentation =
+        kpiPresentation[indicatorId] ?? {};
+
+      const card =
+        KpiCard(spainData, {
+
+          indicatorId,
+
+          title:
+            presentation.title ??
+            getTitle(indicatorId),
+
+          formatValue:
+            presentation.formatValue ??
+            formatter(indicatorId),
+
+          unitLabel:
+            presentation.unitLabel ?? "",
+
+          isPercentage:
+            presentation.isPercentage ??
+            isPercentage(indicatorId)
+
+        });
+
+      grid.append(card);
+    }
+
+
+    groupElement.append(grid);
+
+    section.append(groupElement);
+  }
+
+
+  return section;
+}
+
+
+
 
 const selectedIndicators = preferredIds
   .filter(id => availableIndicators.includes(id));
@@ -889,12 +1593,9 @@ display(meta);
 
 
 ```js
-const spainData = data.filter(
-  d => !d.geo_name || d.geo_name === "España"
-);
-
 const grid = document.createElement("div");
 grid.className = "kpi-grid";
+grid.style.marginBottom = "1rem";
 
 for (const indicatorId of indicatorsToShow) {
 
@@ -928,45 +1629,20 @@ for (const indicatorId of indicatorsToShow) {
 display(grid);
 ```
 
+```js
+const sectionOrder = [
+  "economia",
+  "empleo",
+  "vivienda",
+  "estado",
+  "pensiones",
+  "sociedad",
+  "mundo"
+];
 
-<div id="economia" class="section-header dashboard-section">
-  <div class="section-kicker">01 · Economía</div>
-  <h2>Economía y productividad</h2>
-  <div class="section-description">
-    Crecimiento, productividad, renta, inversión y estructura económica.
-  </div>
-</div>
-
-
-<div id="empleo" class="section-header dashboard-section">
-  <div class="section-kicker">02 · Mercado laboral</div>
-  <h2>Empleo y salarios</h2>
-</div>
-<div id="vivienda" class="section-header dashboard-section">
-  <div class="section-kicker">03 · Vivienda</div>
-  <h2>Vivienda y accesibilidad</h2>
-</div>
-
-
-<div id="estado" class="section-header dashboard-section">
-  <div class="section-kicker">04 · Sector público</div>
-  <h2>Finanzas públicas</h2>
-</div>
-
-
-<div id="pensiones" class="section-header dashboard-section">
-  <div class="section-kicker">05 · Demografía</div>
-  <h2>Pensiones y demografía</h2>
-</div>
-
-
-<div id="sociedad" class="section-header dashboard-section">
-  <div class="section-kicker">06 · Sociedad</div>
-  <h2>La realidad social de España</h2>
-</div>
-
-
-<div id="mundo" class="section-header dashboard-section">
-  <div class="section-kicker">07 · Benchmark internacional</div>
-  <h2>España en el mundo</h2>
-</div>
+for (const sectionId of sectionOrder) {
+  display(
+    renderMetricSection(sectionId)
+  );
+}
+```
