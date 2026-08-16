@@ -500,6 +500,14 @@ html {
       padding-left: 0;
       padding-top: 1rem;
     }
+
+    /* Forzamos que los títulos largos dentro de las tarjetas no se vuelvan gigantes en móvil */
+  .kpi-card h3,
+  .kpi-card .kpi-title,
+  .kpi-card div:not(.kpi-value):not(.kpi-unit) {
+    font-size: 0.85rem !important;
+    line-height: 1.2 !important;
+  }
   }
 
 @media (max-width: 900px) {
