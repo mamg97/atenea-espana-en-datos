@@ -1637,6 +1637,7 @@ display(meta);
 ```js
 // 1. Imprimimos el título y la descripción arriba de todo (ocupando el ancho completo)
 const header = document.createElement("div");
+header.id = "resumen";
 header.className = "section-header dashboard-section first";
 header.style.borderTop = "none";
 header.style.marginTop = "0";
@@ -1652,6 +1653,7 @@ display(header);
 // 2. Creamos el contenedor en dos columnas para poner las tarjetas y el análisis al lado
 const seccionContainer = document.createElement("div");
 seccionContainer.className = "seccion-con-analisis";
+
 
 // Columna izquierda: Las tarjetas KPI
 const columnaDatos = document.createElement("div");
