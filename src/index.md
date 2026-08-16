@@ -504,7 +504,7 @@ html {
     /* Forzamos que los títulos largos dentro de las tarjetas no se vuelvan gigantes en móvil */
   .kpi-card h3,
   .kpi-card .kpi-title,
-  .kpi-card div:not(.kpi-value):not(.kpi-unit) {
+  .kpi-card div {
     font-size: 0.85rem !important;
     line-height: 1.2 !important;
   }
