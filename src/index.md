@@ -245,7 +245,7 @@ html {
   letter-spacing: 0.06em;
 
   font-weight: 700;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   line-height: 1.4;
 }
 
@@ -279,7 +279,7 @@ html {
 
   color: var(--atenea-muted);
 
-  font-size: 0.rem;
+  font-size: 0.8rem;
 }
 
 .kpi-diff {
@@ -445,6 +445,50 @@ html {
   font-size: 0.9rem;
   line-height: 1.5;
 }
+
+
+/* Contenedor principal de la sección */
+  .seccion-con-analisis {
+    display: grid;
+    grid-template-columns: 1fr 300px; /* 1fr (todo el espacio posible) para datos, 300px para el análisis */
+    gap: 2.5rem; /* Espacio entre columnas */
+    align-items: start;
+    margin-bottom: 0.7rem; /* Espacio inferior del bloque */
+  }
+
+  /* La columna lateral de Atenea */
+  .columna-analisis {
+    border-left: 1px solid var(--theme-foreground-faintest); /* Línea fina vertical */
+    padding-left: 2.5rem; /* Espacio entre la línea y el texto */
+    font-size: 1rem;
+    color: var(--theme-foreground-muted);
+    text-align: justify;
+  }
+
+  /* Título del análisis */
+  .columna-analisis h4 {
+    margin-top: 0;
+    color: var(--theme-foreground);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  /* Adaptación para móviles: una sola columna y quitamos la línea */
+  @media (max-width: 768px) {
+    .seccion-con-analisis {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    .columna-analisis {
+      border-left: none;
+      border-top: 1px solid var(--theme-foreground-faintest);
+      padding-left: 0;
+      padding-top: 1rem;
+    }
+  }
 
 /* =========================================================
    MOBILE
@@ -618,7 +662,7 @@ html {
   }
 
   .kpi-unit {
-    font-size: 0.82rem;
+    font-size: 05rem;
   }
 
   .kpi-diff {
@@ -1574,57 +1618,102 @@ meta.innerHTML = `
 display(meta);
 ```
 
-
-<div id="resumen" class="section-header dashboard-section first">
-
-  <div class="section-kicker">
-    Situación actual
-  </div>
-
+```js
+// 1. Imprimimos el título y la descripción arriba de todo (ocupando el ancho completo)
+const header = document.createElement("div");
+header.className = "section-header dashboard-section first";
+header.style.borderTop = "none";
+header.style.marginTop = "0";
+header.innerHTML = `
+  <div class="section-kicker">Situación actual</div>
   <h2>España en un minuto</h2>
-
   <div class="section-description">
-    Indicadores esenciales para comprender rápidamente
-    la situación económica y social de España.
+    Indicadores esenciales para comprender rápidamente la situación económica y social de España.
   </div>
+`;
+display(header);
 
-</div>
+// 2. Creamos el contenedor en dos columnas para poner las tarjetas y el análisis al lado
+const seccionContainer = document.createElement("div");
+seccionContainer.className = "seccion-con-analisis";
 
+// Columna izquierda: Las tarjetas KPI
+const columnaDatos = document.createElement("div");
+columnaDatos.className = "columna-datos";
+
+const grid = document.createElement("div");
+grid.className = "kpi-grid";
+
+for (const indicatorId of indicatorsToShow) {
+  const presentation = kpiPresentation[indicatorId] ?? {};
+  const card = KpiCard(spainData, {
+    indicatorId,
+    title: presentation.title ?? getTitle(indicatorId),
+    formatValue: presentation.formatValue ?? formatter(indicatorId),
+    unitLabel: presentation.unitLabel ?? "",
+    isPercentage: presentation.isPercentage ?? isPercentage(indicatorId)
+  });
+  grid.append(card);
+}
+columnaDatos.append(grid);
+seccionContainer.append(columnaDatos);
+
+// Columna derecha: El cuadro de Análisis Atenea
+const columnaAnalisis = document.createElement("div");
+columnaAnalisis.className = "columna-analisis";
+columnaAnalisis.innerHTML = `
+  <h4>💡 Análisis Atenea</h4>
+  <p>
+    La economía española mantiene tasas de crecimiento diferencial positivas frente a gran parte del entorno europeo, apoyada en el sector exterior y la creación de empleo. 
+  </p>
+  <p>
+    No obstante, los desequilibrios estructurales en productividad y el coste de acceso residencial continúan marcando el pulso del debate socioeconómico.
+  </p>
+`;
+seccionContainer.append(columnaAnalisis);
+
+// Mostramos el bloque de dos columnas
+display(seccionContainer);
+
+// 3. Renderizamos el resto de secciones del dashboard normalmente
+const sectionOrder = [
+  "economia",
+  "empleo",
+  "vivienda",
+  "estado",
+  "pensiones",
+  "sociedad",
+  "mundo"
+];
+
+for (const sectionId of sectionOrder) {
+  display(
+    renderMetricSection(sectionId)
+  );
+}
+```
 
 
 ```js
 const grid = document.createElement("div");
 grid.className = "kpi-grid";
-grid.style.marginBottom = "1rem";
 
 for (const indicatorId of indicatorsToShow) {
-
-  const presentation =
-    kpiPresentation[indicatorId] ?? {};
+  const presentation = kpiPresentation[indicatorId] ?? {};
 
   const card = KpiCard(spainData, {
-
     indicatorId,
-
-    title:
-      presentation.title ??
-      getTitle(indicatorId),
-
-    formatValue:
-      presentation.formatValue ??
-      formatter(indicatorId),
-
-    unitLabel:
-      presentation.unitLabel ?? "",
-
-    isPercentage:
-      presentation.isPercentage ??
-      isPercentage(indicatorId)
-
+    title: presentation.title ?? getTitle(indicatorId),
+    formatValue: presentation.formatValue ?? formatter(indicatorId),
+    unitLabel: presentation.unitLabel ?? "",
+    isPercentage: presentation.isPercentage ?? isPercentage(indicatorId)
   });
 
   grid.append(card);
 }
+
+// Inyectamos el grid en el contenedor izquierdo de la sección
+document.getElementById("resumen-grid-container").replaceChildren(grid);
 
 display(grid);
 ```
