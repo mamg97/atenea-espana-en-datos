@@ -115,6 +115,13 @@ html {
 
 /* Responsive */
 
+@media (min-width: 769px) {
+
+  .columna-analisis {
+    position: sticky;
+    top: 90px;
+  }
+
 @media (max-width: 900px) {
 
   .atenea-nav {
@@ -208,7 +215,7 @@ html {
 }
 
 .kpi-card {
-  height: 230 px;
+
   padding: 1.2rem 1.25rem;
 
   display: flex;
@@ -678,7 +685,7 @@ html {
   }
 
   .kpi-unit {
-    font-size: 05rem;
+    font-size: 0.5rem;
   }
 
   .kpi-diff {
@@ -809,6 +816,22 @@ function getLatest(indicatorId) {
   return rows[rows.length - 1];
 }
 
+function getLatestValue(indicatorId) {
+  return getLatest(indicatorId)?.value;
+}
+
+function getLatestYear(indicatorId) {
+  return getLatest(indicatorId)?.year;
+}
+
+function formatLatest(indicatorId, formatFunction) {
+  const value = getLatestValue(indicatorId);
+
+  return Number.isFinite(value)
+    ? formatFunction(value)
+    : "—";
+}
+
 function getTitle(indicatorId) {
   const row = getLatest(indicatorId);
 
@@ -854,10 +877,13 @@ function isPercentage(indicatorId) {
 const preferredIds = [
   "crecimiento_pib_real",
   "pib_per_capita_eur",
-  "salario_mediano_anual_bruto_Total",
   "tasa_desempleo",
+  "salario_mediano_anual_bruto_Total",
   "deuda_publica_pde_pib",
-  "inflacion_ipc_media_anual"
+  "inflacion_ipc_media_anual",
+  "tasa_arope",
+  "variacion_precio_vivienda"
+
 ];
 
 const nf0 = new Intl.NumberFormat("es-ES", {
@@ -1241,6 +1267,18 @@ const sectionDefinitions = {
     description:
       "Crecimiento, renta, tamaño de la economía y evolución de los precios.",
 
+    analysis: () => [
+    `El PIB real crece un ${formatLatest(
+      "crecimiento_pib_real",
+      pct1
+    )} en ${getLatestYear("crecimiento_pib_real")}. La inflación media se sitúa en ${formatLatest(
+      "inflacion_ipc_media_anual",
+      pct1
+    )}.`,
+
+    "La evolución agregada de la economía debe leerse junto con la renta por habitante y, en una fase posterior, con la convergencia respecto a la UE y otras economías comparables."
+  ],
+
     groups: [
       {
         title: "Actividad y renta",
@@ -1268,7 +1306,19 @@ const sectionDefinitions = {
     title: "Empleo y salarios",
     description:
       "Actividad, empleo, desempleo y evolución de las rentas del trabajo.",
+    analysis: () => [
+      `La tasa de desempleo se sitúa en ${formatLatest(
+        "tasa_desempleo",
+        pct1
+      )}, mientras que el paro juvenil alcanza el ${formatLatest(
+        "tasa_paro_juvenil",
+        pct1
+      )}.`,
 
+      `La fotografía laboral no puede limitarse al volumen de empleo: salario mediano, salario medio y distribución salarial permiten analizar también la calidad económica del trabajo. Las principales series salariales disponibles llegan actualmente hasta ${getLatestYear(
+        "salario_mediano_anual_bruto_Total"
+      )}.`
+    ],
     groups: [
       {
         title: "Mercado laboral",
@@ -1318,6 +1368,14 @@ const sectionDefinitions = {
     title: "Vivienda y accesibilidad",
     description:
       "Evolución de los precios de compra y alquiler y actividad del mercado residencial.",
+    analysis: () => [
+        `El precio de la vivienda registra una variación del ${formatLatest(
+          "variacion_precio_vivienda",
+          pct1
+        )} en ${getLatestYear("variacion_precio_vivienda")}.`,
+
+        "La evolución del precio, por sí sola, no mide la accesibilidad. El análisis deberá completarse con renta de los hogares, esfuerzo financiero, alquiler y oferta de vivienda."
+      ],
 
     groups: [
       {
@@ -1347,6 +1405,15 @@ const sectionDefinitions = {
     description:
       "Deuda pública y algunos de los principales indicadores disponibles de gasto público.",
 
+    analysis: () => [
+  `La deuda pública se sitúa en ${formatLatest(
+    "deuda_publica_pde_pib",
+    pct1
+  )} del PIB en ${getLatestYear("deuda_publica_pde_pib")}.`,
+
+  "La ratio ha descendido desde el máximo alcanzado durante la pandemia, pero el nivel de deuda continúa siendo una variable central para valorar el margen fiscal y la sostenibilidad de las cuentas públicas."
+],
+
     groups: [
       {
         title: "Sector público",
@@ -1369,6 +1436,17 @@ const sectionDefinitions = {
     note:
       "El dataset actual todavía no contiene indicadores específicos del sistema de pensiones. Esta primera versión muestra únicamente la base demográfica.",
 
+    analysis: () => [
+  `La población residente alcanza ${formatLatest(
+    "poblacion_residente",
+    compact
+  )} personas y su crecimiento anual se sitúa en ${formatLatest(
+    "crecimiento_poblacion",
+    pct1
+  )}.`,
+
+  "Estos indicadores describen la base demográfica, pero todavía no permiten evaluar la sostenibilidad del sistema de pensiones. Faltan métricas específicas de afiliación, pensionistas, pensión media, gasto, tasa de dependencia y proyecciones."
+    ],
     groups: [
       {
         title: "Demografía",
@@ -1386,6 +1464,17 @@ const sectionDefinitions = {
     title: "Renta, pobreza y desigualdad",
     description:
       "Distribución de la renta, desigualdad económica y riesgo de pobreza o exclusión social.",
+    analysis: () => [
+  `La tasa AROPE se sitúa en ${formatLatest(
+    "tasa_arope",
+    pct1
+  )} y el índice de Gini en ${formatLatest(
+    "indice_gini",
+    num1
+  )}.`,
+
+  "La mejora de la renta media no implica necesariamente una mejora equivalente para todos los hogares. Por eso este bloque combina nivel de renta, desigualdad, pobreza y exclusión social."
+],
 
     groups: [
       {
@@ -1425,7 +1514,14 @@ const sectionDefinitions = {
 
     note:
       "La comparación sistemática con UE, eurozona, OCDE y otras economías se incorporará en la siguiente fase.",
+    analysis: () => [
+  `España ocupa la posición ${formatLatest(
+    "posicion_pib_mundial",
+    value => `#${Math.round(value)}`
+  )} por tamaño del PIB según la serie actualmente incorporada.`,
 
+  "La posición internacional no debe medirse únicamente por el tamaño de la economía o el turismo. La siguiente ampliación incorporará comparaciones de renta, productividad, empleo, deuda y otros indicadores frente a UE, eurozona, OCDE y referentes globales."
+],
     groups: [
       {
         title: "Posición internacional",
@@ -1459,7 +1555,9 @@ function renderMetricSection(sectionId) {
   section.className = "dashboard-section";
 
 
-  /* HEADER */
+  /* ============================
+     HEADER
+     ============================ */
 
   const header = document.createElement("div");
   header.className = "section-header";
@@ -1481,7 +1579,9 @@ function renderMetricSection(sectionId) {
   section.append(header);
 
 
-  /* NOTA METODOLÓGICA */
+  /* ============================
+     NOTA
+     ============================ */
 
   if (config.note) {
 
@@ -1494,7 +1594,23 @@ function renderMetricSection(sectionId) {
   }
 
 
-  /* GRUPOS */
+  /* ============================
+     DOS COLUMNAS
+     ============================ */
+
+  const content =
+    document.createElement("div");
+
+  content.className = "seccion-con-analisis";
+
+
+  /* COLUMNA DATOS */
+
+  const columnaDatos =
+    document.createElement("div");
+
+  columnaDatos.className = "columna-datos";
+
 
   for (const group of config.groups) {
 
@@ -1517,8 +1633,11 @@ function renderMetricSection(sectionId) {
     const groupTitle =
       document.createElement("h3");
 
-    groupTitle.className = "metric-group-title";
-    groupTitle.textContent = group.title;
+    groupTitle.className =
+      "metric-group-title";
+
+    groupTitle.textContent =
+      group.title;
 
     groupElement.append(groupTitle);
 
@@ -1565,9 +1684,63 @@ function renderMetricSection(sectionId) {
 
     groupElement.append(grid);
 
-    section.append(groupElement);
+    columnaDatos.append(groupElement);
   }
 
+
+  content.append(columnaDatos);
+
+
+  /* ============================
+     ANÁLISIS ATENEA
+     ============================ */
+
+  const analysis =
+    typeof config.analysis === "function"
+      ? config.analysis()
+      : config.analysis ?? [];
+
+
+  if (analysis.length) {
+
+    const columnaAnalisis =
+      document.createElement("aside");
+
+    columnaAnalisis.className =
+      "columna-analisis";
+
+
+    const analysisTitle =
+      document.createElement("h4");
+
+    analysisTitle.textContent =
+      "Análisis Atenea";
+
+    columnaAnalisis.append(
+      analysisTitle
+    );
+
+
+    for (const text of analysis) {
+
+      const paragraph =
+        document.createElement("p");
+
+      paragraph.textContent = text;
+
+      columnaAnalisis.append(
+        paragraph
+      );
+    }
+
+
+    content.append(
+      columnaAnalisis
+    );
+  }
+
+
+  section.append(content);
 
   return section;
 }
@@ -1581,10 +1754,9 @@ const selectedIndicators = preferredIds
 const fallbackIndicators = availableIndicators
   .filter(id => !selectedIndicators.includes(id));
 
-const indicatorsToShow = [
-  ...selectedIndicators,
-  ...fallbackIndicators
-].slice(0, 6);
+const indicatorsToShow = preferredIds
+  .filter(id => availableIndicators.includes(id));
+
 
 const years = data
   .map(d => d.year)
@@ -1680,12 +1852,18 @@ seccionContainer.append(columnaDatos);
 const columnaAnalisis = document.createElement("div");
 columnaAnalisis.className = "columna-analisis";
 columnaAnalisis.innerHTML = `
-  <h4>💡 Análisis Atenea</h4>
+  <h4>Análisis Atenea</h4>
   <p>
-    La economía española mantiene tasas de crecimiento diferencial positivas frente a gran parte del entorno europeo, apoyada en el sector exterior y la creación de empleo. 
+    España combina crecimiento económico positivo con
+    desequilibrios relevantes en empleo, cuentas públicas,
+    vivienda y vulnerabilidad social.
   </p>
   <p>
-    No obstante, los desequilibrios estructurales en productividad y el coste de acceso residencial continúan marcando el pulso del debate socioeconómico.
+    La lectura de la situación exige observar conjuntamente
+    crecimiento, renta, salarios, desempleo, deuda,
+    precios, vivienda y exclusión social; una mejora en
+    una dimensión no implica necesariamente una mejora
+    equivalente en las demás.
   </p>
 `;
 seccionContainer.append(columnaAnalisis);
@@ -1711,45 +1889,3 @@ for (const sectionId of sectionOrder) {
 }
 ```
 
-
-```js
-const grid = document.createElement("div");
-grid.className = "kpi-grid";
-
-for (const indicatorId of indicatorsToShow) {
-  const presentation = kpiPresentation[indicatorId] ?? {};
-
-  const card = KpiCard(spainData, {
-    indicatorId,
-    title: presentation.title ?? getTitle(indicatorId),
-    formatValue: presentation.formatValue ?? formatter(indicatorId),
-    unitLabel: presentation.unitLabel ?? "",
-    isPercentage: presentation.isPercentage ?? isPercentage(indicatorId)
-  });
-
-  grid.append(card);
-}
-
-// Inyectamos el grid en el contenedor izquierdo de la sección
-document.getElementById("resumen-grid-container").replaceChildren(grid);
-
-display(grid);
-```
-
-```js
-const sectionOrder = [
-  "economia",
-  "empleo",
-  "vivienda",
-  "estado",
-  "pensiones",
-  "sociedad",
-  "mundo"
-];
-
-for (const sectionId of sectionOrder) {
-  display(
-    renderMetricSection(sectionId)
-  );
-}
-```
