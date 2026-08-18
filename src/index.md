@@ -121,6 +121,7 @@ html {
     position: sticky;
     top: 90px;
   }
+}
 
 @media (max-width: 900px) {
 
