@@ -280,6 +280,7 @@ html {
   line-height: 1.05;
 
   font-weight: 700;
+  overflow-wrap: break-word;
 }
 
 .kpi-unit {
@@ -483,57 +484,42 @@ html {
     font-weight: 700;
     margin-bottom: 1rem;
   }
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+  .seccion-con-analisis {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .columna-datos {
+    min-width: 0;
+  }
+
+  .columna-analisis {
+    position: static;
+
+    border-left: none;
+    border-top: 1px solid var(--atenea-border);
+
+    padding-left: 0;
+    padding-top: 1rem;
+
+    text-align: left;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+}
 
 /* =========================================================
    MOBILE
    ========================================================= */
-
-  /* Adaptación para móviles: una sola columna y quitamos la línea */
-  @media (max-width: 768px) {
-    .seccion-con-analisis {
-      grid-template-columns: 1fr;
-      gap: 1rem;
-    }
-
-    /* Forzamos que las unidades y textos dentro de las tarjetas se adapten bien en móvil */
-    .kpi-card .unit, 
-    .kpi-grid span,
-    .kpi-card span {
-      font-size: 1rem !important; /* Ajusta este valor si lo prefieres un poco más pequeño o grande */
-    }
-
-    .columna-analisis {
-      border-left: none;
-      border-top: 1px solid var(--theme-foreground-faintest);
-      padding-left: 0;
-      padding-top: 1rem;
-    }
-
-    /* Forzamos que los títulos largos dentro de las tarjetas no se vuelvan gigantes en móvil */
-  .kpi-card h3,
-  .kpi-card .kpi-title,
-  .kpi-card div {
-    font-size: 0.85rem !important;
-    line-height: 1.2 !important;
-  }
-  }
-
-@media (max-width: 900px) {
-  .kpi-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .perspective-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 600px) {
-  .kpi-grid,
-  .perspective-grid {
-    grid-template-columns: 1fr;
-  }
-}
 
 @media (max-width: 700px) {
 
@@ -548,7 +534,9 @@ html {
   .observablehq {
     width: 100%;
     max-width: 100%;
+
     box-sizing: border-box;
+
     padding-left: 16px;
     padding-right: 16px;
   }
@@ -565,9 +553,9 @@ html {
     flex-direction: column;
     align-items: flex-start;
 
-    gap: 0.6rem;
+    gap: 0.5rem;
 
-    padding: 0.75rem 0;
+    padding: 0.7rem 0;
 
     background: rgba(255, 255, 255, 0.97);
   }
@@ -580,37 +568,39 @@ html {
     width: 100%;
 
     display: flex;
-    gap: 1rem;
+    gap: 0.9rem;
 
     overflow-x: auto;
+
     white-space: nowrap;
 
-    padding-bottom: 0.25rem;
+    padding-bottom: 0.2rem;
   }
 
   .atenea-nav-links a {
     flex: 0 0 auto;
-    font-size: 0.78rem;
+
+    font-size: 0.76rem;
   }
 
 
   /* HERO */
 
   .hero {
-    padding: 1.8rem 0 1.2rem;
+    padding: 1.4rem 0 1rem;
+
     margin-bottom: 0.5rem;
   }
 
   .hero-kicker {
-    font-size: 0.72rem;
+    font-size: 0.7rem;
   }
 
   .hero h1 {
-    font-size: 2.7rem;
+    font-size: 2.4rem;
     line-height: 1.05;
 
-    margin-top: 0.5rem;
-    margin-bottom: 0.8rem;
+    margin: 0.5rem 0 0.8rem;
 
     white-space: normal;
   }
@@ -619,16 +609,16 @@ html {
     max-width: 100%;
 
     font-size: 1rem;
-    line-height: 1.5;
+    line-height: 1.45;
   }
 
   .hero-meta {
     display: flex;
     flex-wrap: wrap;
 
-    gap: 0.5rem 1.2rem;
+    gap: 0.4rem 1rem;
 
-    margin-top: 1rem;
+    margin-top: 0.8rem;
 
     font-size: 0.8rem;
   }
@@ -637,30 +627,31 @@ html {
   /* SECCIONES */
 
   .dashboard-section {
-    scroll-margin-top: 110px;
+    scroll-margin-top: 105px;
 
-    padding-top: 2rem;
-    padding-bottom: 2rem;
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
   }
 
   .section-header {
-    margin-bottom: 1rem;
+    margin-top: 1.25rem;
+    margin-bottom: 0.8rem;
   }
 
   .section-header h2 {
-    font-size: 1.7rem;
+    font-size: 1.55rem;
     line-height: 1.15;
   }
 
   .section-kicker {
-    font-size: 0.72rem;
+    font-size: 0.7rem;
   }
 
   .section-description {
     max-width: 100%;
 
-    font-size: 0.95rem;
-    line-height: 1.5;
+    font-size: 0.9rem;
+    line-height: 1.45;
   }
 
 
@@ -668,65 +659,125 @@ html {
 
   .kpi-grid {
     grid-template-columns: 1fr;
-    gap: 0.8rem;
+
+    gap: 0.7rem;
   }
 
   .kpi-card {
-    min-height: auto;
+    height: auto;
+    min-height: 0;
 
-    padding: 1.15rem;
+    padding: 1rem;
   }
 
   .kpi-title {
     font-size: 0.75rem;
+    line-height: 1.3;
   }
 
   .kpi-value {
-    font-size: 2rem;
+    font-size: 1.85rem;
+    line-height: 1.05;
   }
 
   .kpi-unit {
-    font-size: 0.5rem;
-  }
-
-  .kpi-diff {
     font-size: 0.78rem;
   }
 
+  .kpi-diff {
+    font-size: 0.76rem;
+  }
+
   .kpi-year {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
   }
 
   .kpi-spark {
-    padding-top: 0.8rem;
+    width: 100%;
+
+    padding-top: 0.65rem;
+  }
+
+  .kpi-years {
+    font-size: 0.65rem;
   }
 
   .kpi-source {
     white-space: normal;
 
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     line-height: 1.35;
   }
 
+  .kpi-details {
+    font-size: 0.7rem;
+  }
 
-  /* Evitar desbordamientos */
+
+  /* ANÁLISIS ATENEA */
+
+  .seccion-con-analisis {
+    display: grid;
+
+    grid-template-columns: 1fr;
+
+    gap: 1rem;
+  }
+
+  .columna-datos {
+    min-width: 0;
+  }
+
+  .columna-analisis {
+    position: static;
+
+    border-left: none;
+    border-top: 1px solid var(--atenea-border);
+
+    padding-left: 0;
+    padding-top: 1rem;
+
+    font-size: 0.9rem;
+
+    text-align: left;
+  }
+
+  .columna-analisis h4 {
+    font-size: 0.72rem;
+
+    margin-bottom: 0.7rem;
+  }
+
+
+  /* GRUPOS */
+
+  .metric-group {
+    margin-top: 1.25rem;
+  }
+
+  .metric-group:first-of-type {
+    margin-top: 0.8rem;
+  }
+
+  .metric-group-title {
+    margin-bottom: 0.7rem;
+
+    font-size: 1rem;
+  }
+
+  .section-note {
+    max-width: 100%;
+
+    font-size: 0.82rem;
+  }
+
+
+  /* EVITAR OVERFLOW */
 
   img,
   svg,
   canvas {
     max-width: 100%;
-  }
-
-  .metric-group {
-    margin-top: 1.5rem;
-  }
-
-  .metric-group-title {
-    font-size: 1.05rem;
-  }
-
-  .section-note {
-    font-size: 0.85rem;
   }
 
 }
@@ -931,7 +982,7 @@ const kpiPresentation = {
 
   pib_nominal_eur: {
     title: "PIB nominal",
-    formatValue: millionsEuro,
+    formatValue: value => `${nf0.format(value / 1000000)}`, /* Dividimos entre 1 millón */
     unitLabel: "millones de euros"
   },
 
